@@ -22,8 +22,8 @@ const AdminMenu = () => {
   const fetchData = async () => {
     try {
       const [foodRes, catRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/api/menu/'),
-        axios.get('http://127.0.0.1:8000/api/categories/')
+        axios.get('/api/menu/'),
+        axios.get('/api/categories/')
       ]);
       setFoods(foodRes.data);
       setCategories(catRes.data);
@@ -48,9 +48,9 @@ const AdminMenu = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://127.0.0.1:8000/api/menu/${editingId}/`, formData);
+        await axios.put(`/api/menu/${editingId}/`, formData);
       } else {
-        await axios.post('http://127.0.0.1:8000/api/menu/', formData);
+        await axios.post('/api/menu/', formData);
       }
       setIsAdding(false);
       setEditingId(null);
@@ -64,7 +64,7 @@ const AdminMenu = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this item?")) return;
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/menu/${id}/`);
+      await axios.delete(`/api/menu/${id}/`);
       fetchData();
     } catch (error) {
       console.error("Error deleting food:", error);

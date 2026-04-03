@@ -34,3 +34,18 @@ class BookingAdmin(admin.ModelAdmin):
     list_display = ('user_name', 'phone', 'date', 'time', 'people_count', 'status')
     list_filter = ('date', 'status')
     search_fields = ('user_name', 'phone')
+    actions = ['confirm_bookings', 'reject_bookings']
+
+    @admin.action(description="Tanlangan zakazlarni tasdiqlash")
+    def confirm_bookings(self, request, queryset):
+        count = queryset.update(status='accepted')
+        # trigger save for each to send telegram notification
+        for obj in queryset:
+            obj.status = 'accepted'
+            obj.save()
+        self.message_user(request, f"{count} ta zakaz tasdiqlandi va Telegramga yuborildi.")
+
+    @admin.action(description="Tanlangan zakazlarni rad etish")
+    def reject_bookings(self, request, queryset):
+        count = queryset.update(status='rejected')
+        self.message_user(request, f"{count} ta zakaz rad etildi.")

@@ -21,7 +21,7 @@ const Cart = () => {
   });
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/branches/').then(res => {
+    axios.get('/api/branches/').then(res => {
       setBranches(res.data);
       if (res.data.length > 0) setFormData(prev => ({ ...prev, branch: res.data[0].id }));
     });
@@ -40,7 +40,7 @@ const Cart = () => {
         }))
       };
       
-      const response = await axios.post('http://127.0.0.1:8000/api/bookings/', payload);
+      const response = await axios.post('/api/bookings/', payload);
       
       // Save to local history
       addOrderToHistory({

@@ -23,9 +23,9 @@ const Menu = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const catRes = await axios.get('http://127.0.0.1:8000/api/categories/');
+        const catRes = await axios.get('/api/categories/');
         setCategories(catRes.data);
-        const foodRes = await axios.get('http://127.0.0.1:8000/api/menu/');
+        const foodRes = await axios.get('/api/menu/');
         setFoods(foodRes.data);
       } catch (err) {
         console.error("Data fetch error:", err);
@@ -50,7 +50,7 @@ const Menu = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/comments/', {
+      await axios.post('/api/comments/', {
         food: selectedFood.id,
         ...commentData
       });
@@ -58,7 +58,7 @@ const Menu = () => {
       setShowCommentModal(false);
       setCommentData({ user_name: '', text: '', rating: 5 });
       // Refresh food to see comment count update (if backend handles it)
-      const foodRes = await axios.get('http://127.0.0.1:8000/api/menu/');
+      const foodRes = await axios.get('/api/menu/');
       setFoods(foodRes.data);
     } catch (err) {
       console.error("Comment error:", err);
@@ -214,15 +214,54 @@ const Menu = () => {
                   />
                 </div>
                 
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('rating')}</label>
-                  <select 
-                    value={commentData.rating}
-                    onChange={(e) => setCommentData({...commentData, rating: parseInt(e.target.value)})}
-                    style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)' }}
-                  >
-                    {[5,4,3,2,1].map(num => <option key={num} value={num}>{num} ★</option>)}
-                  </select>
+                <div style={{ background: 'rgba(197, 160, 89, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)', textAlign: 'center' }}>
+                  <label style={{ display: 'block', marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--accent-gold)', fontWeight: 600 }}>{t('rating')}</label>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+                    <input 
+                      type="number" 
+                      min="1" 
+                      max="5" 
+                      required
+                      value={commentData.rating}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value);
+                        if (!isNaN(val)) {
+                          setCommentData({...commentData, rating: Math.min(5, Math.max(1, val))});
+                        } else {
+                          setCommentData({...commentData, rating: ''});
+                        }
+                      }}
+                      style={{ 
+                        width: '70px', 
+                        height: '70px', 
+                        fontSize: '2rem', 
+                        textAlign: 'center', 
+                        borderRadius: '12px', 
+                        background: 'var(--bg-dark)', 
+                        border: '2px solid var(--accent-gold)', 
+                        color: 'var(--accent-gold)',
+                        fontWeight: 'bold',
+                        outline: 'none',
+                        boxShadow: '0 0 15px rgba(197, 160, 89, 0.2)'
+                      }}
+                    />
+                    
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star 
+                          key={star} 
+                          size={24} 
+                          fill={star <= (parseInt(commentData.rating) || 0) ? "var(--accent-gold)" : "none"} 
+                          color={star <= (parseInt(commentData.rating) || 0) ? "var(--accent-gold)" : "var(--text-muted)"}
+                          style={{ transition: 'all 0.3s' }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '1rem' }}>
+                    Klaviaturadan 1 dan 5 gacha son yozing
+                  </p>
                 </div>
 
                 <div>

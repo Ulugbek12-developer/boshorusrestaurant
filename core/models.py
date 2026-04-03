@@ -57,8 +57,24 @@ class Booking(models.Model):
     people_count = models.IntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
-    def __str__(self):
-        return f'{self.user_name} - {self.date} {self.time}'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_status = self.status
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        # Send notification if status was changed to accepted or if it's new and accepted
+        if (not is_new and self.status == 'accepted' and self.__original_status != 'accepted') or (is_new and self.status == 'accepted'):
+            # Only send if there's an ID (items need to be saved first for meaningful notification)
+            # But wait, send_telegram_notification uses self.items, which is related.
+            # If it's new, we need to save first to get an ID.
+            super().save(*args, **kwargs)
+            self.send_telegram_notification()
+            self.__original_status = self.status
+            return
+
+        super().save(*args, **kwargs)
+        self.__original_status = self.status
 
     def send_telegram_notification(self):
         token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
@@ -68,7 +84,7 @@ class Booking(models.Model):
             items_text = "\n".join([f"- {item.food.name} x {item.quantity} ({item.price} so'm)" for item in items])
             total = sum(item.price * item.quantity for item in items)
             message = (
-                f"🆕 YANGI BUYURTMA!\n\n"
+                f"✅ ZAKAZ TASDIQLANDI!\n\n"
                 f"📍 Filial: {self.branch.name if self.branch else 'Tanlanmagan'}\n"
                 f"👤 Mijoz: {self.user_name}\n"
                 f"📞 Tel: {self.phone}\n"

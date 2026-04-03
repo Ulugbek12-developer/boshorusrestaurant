@@ -22,7 +22,7 @@ const AdminOrders = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/bookings/');
+      const response = await axios.get('/api/bookings/');
       setBookings(response.data.reverse());
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -35,7 +35,7 @@ const AdminOrders = () => {
 
   const handleStatusUpdate = async (id, status) => {
     try {
-      await axios.patch(`http://127.0.0.1:8000/api/bookings/${id}/`, { status });
+      await axios.patch(`/api/bookings/${id}/`, { status });
       fetchBookings();
       if (selectedBooking?.id === id) {
         setSelectedBooking(prev => ({ ...prev, status }));

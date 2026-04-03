@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   // Axios instance with interceptors
   const api = axios.create({
-    baseURL: 'http://127.0.0.1:8000/api/',
+    baseURL: '/api/',
   });
 
   api.interceptors.request.use(
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       if (error.response.status === 401 && !originalRequest._retry && refreshToken) {
         originalRequest._retry = true;
         try {
-          const res = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
+          const res = await axios.post('/api/token/refresh/', {
             refresh: refreshToken,
           });
           const newToken = res.data.access;
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/token/', {
+      const res = await axios.post('/api/token/', {
         username,
         password,
       });

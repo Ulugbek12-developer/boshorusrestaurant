@@ -8,7 +8,7 @@ const AdminComments = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/comments/');
+      const response = await axios.get('/api/comments/');
       setComments(response.data.reverse());
     } catch (error) {
       console.error("Error fetching comments:", error);
@@ -22,7 +22,7 @@ const AdminComments = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this comment?")) return;
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/comments/${id}//`);
+      await axios.delete(`/api/comments/${id}//`);
       fetchComments();
     } catch (error) {
       console.error("Error deleting comment:", error);

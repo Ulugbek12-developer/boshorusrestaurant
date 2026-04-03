@@ -9,7 +9,7 @@ const Branches = () => {
   const [branches, setBranches] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/branches/').then(res => {
+    axios.get('/api/branches/').then(res => {
       setBranches(res.data);
     });
   }, []);

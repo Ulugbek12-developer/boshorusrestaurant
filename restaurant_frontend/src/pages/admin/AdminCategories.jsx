@@ -12,7 +12,7 @@ const AdminCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/categories/');
+      const response = await axios.get('/api/categories/');
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -26,7 +26,7 @@ const AdminCategories = () => {
   const handleAdd = async () => {
     if (!newCategory.trim()) return;
     try {
-      await axios.post('http://127.0.0.1:8000/api/categories/', { name: newCategory });
+      await axios.post('/api/categories/', { name: newCategory });
       setNewCategory("");
       setIsAdding(false);
       fetchCategories();
@@ -38,7 +38,7 @@ const AdminCategories = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/categories/${id}/`);
+      await axios.delete(`/api/categories/${id}/`);
       fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
@@ -48,7 +48,7 @@ const AdminCategories = () => {
   const handleUpdate = async (id) => {
     if (!editValue.trim()) return;
     try {
-      await axios.put(`http://127.0.0.1:8000/api/categories/${id}/`, { name: editValue });
+      await axios.put(`/api/categories/${id}/`, { name: editValue });
       setEditingId(null);
       fetchCategories();
     } catch (error) {

@@ -17,7 +17,7 @@ const AdminBranches = () => {
 
   const fetchBranches = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/branches/');
+      const response = await axios.get('/api/branches/');
       setBranches(response.data);
     } catch (error) {
       console.error("Error fetching branches:", error);
@@ -36,9 +36,9 @@ const AdminBranches = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://127.0.0.1:8000/api/branches/${editingId}/`, formData);
+        await axios.put(`/api/branches/${editingId}/`, formData);
       } else {
-        await axios.post('http://127.0.0.1:8000/api/branches/', formData);
+        await axios.post('/api/branches/', formData);
       }
       setIsAdding(false);
       setEditingId(null);
@@ -58,7 +58,7 @@ const AdminBranches = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this branch?")) return;
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/branches/${id}/`);
+      await axios.delete(`/api/branches/${id}/`);
       fetchBranches();
     } catch (error) {
       console.error("Error deleting branch:", error);

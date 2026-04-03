@@ -19,7 +19,7 @@ const Book = () => {
   });
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/branches/').then(res => {
+    axios.get('/api/branches/').then(res => {
       setBranches(res.data);
       if (res.data.length > 0) setFormData(prev => ({ ...prev, branch: res.data[0].id }));
     });
@@ -29,7 +29,7 @@ const Book = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/bookings/', formData);
+      await axios.post('/api/bookings/', formData);
       setSuccess(true);
     } catch (error) {
       console.error("Booking error:", error);
